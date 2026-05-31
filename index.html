@@ -351,45 +351,77 @@
 <!-- End paper abstract -->
 
 
-<!-- Image carousel -->
+<!-- Static interactive slider demo -->
 <section class="hero is-small">
   <div class="hero-body">
-    <div class="container">
-      <div id="results-carousel" class="carousel results-carousel">
-       <div class="item">
-        <!-- TODO: Replace with your research result images -->
-        <img src="static/images/carousel1.jpg" alt="First research result visualization" loading="lazy"/>
-        <!-- TODO: Replace with description of this result -->
-        <h2 class="subtitle has-text-centered">
-          First image description.
-        </h2>
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Interactive Visualization</h2>
+
+      <p class="has-text-centered" style="margin-bottom: 1.5rem;">
+        Drag the slider to visualize the result under different values of
+        <b>t</b>. This is a static demo using pre-computed images.
+      </p>
+
+      <div class="columns is-centered">
+        <div class="column is-four-fifths has-text-centered">
+          <img
+            id="havedit-slider-image"
+            src="static/images/carousel1.jpg"
+            alt="HavEdit slider demo result"
+            style="width: 100%; border-radius: 12px;"
+          >
+
+          <h2 class="subtitle has-text-centered" style="margin-top: 1rem;">
+            t = <span id="havedit-slider-value">1</span>
+          </h2>
+
+          <input
+            id="havedit-slider"
+            class="slider is-fullwidth is-large"
+            type="range"
+            min="1"
+            max="4"
+            value="1"
+            step="1"
+          >
+
+          <div class="level is-mobile" style="margin-top: 0.5rem;">
+            <div class="level-item">1</div>
+            <div class="level-item">2</div>
+            <div class="level-item">3</div>
+            <div class="level-item">4</div>
+          </div>
+        </div>
       </div>
-      <div class="item">
-        <!-- Your image here -->
-        <img src="static/images/carousel2.jpg" alt="Second research result visualization" loading="lazy"/>
-        <h2 class="subtitle has-text-centered">
-          Second image description.
-        </h2>
-      </div>
-      <div class="item">
-        <!-- Your image here -->
-        <img src="static/images/carousel3.jpg" alt="Third research result visualization" loading="lazy"/>
-        <h2 class="subtitle has-text-centered">
-         Third image description.
-       </h2>
-     </div>
-     <div class="item">
-      <!-- Your image here -->
-      <img src="static/images/carousel4.jpg" alt="Fourth research result visualization" loading="lazy"/>
-      <h2 class="subtitle has-text-centered">
-        Fourth image description.
-      </h2>
     </div>
   </div>
-</div>
-</div>
 </section>
-<!-- End image carousel -->
+<!-- End static interactive slider demo -->
+
+<script>
+  const haveditSlider = document.getElementById("havedit-slider");
+  const haveditSliderImage = document.getElementById("havedit-slider-image");
+  const haveditSliderValue = document.getElementById("havedit-slider-value");
+
+  const haveditImages = {
+    1: "static/images/carousel1.jpg",
+    2: "static/images/carousel2.jpg",
+    3: "static/images/carousel3.jpg",
+    4: "static/images/carousel4.jpg"
+  };
+
+  haveditSlider.addEventListener("input", function () {
+    const t = this.value;
+    haveditSliderValue.textContent = t;
+    haveditSliderImage.src = haveditImages[t];
+  });
+
+  // Preload images for smoother slider interaction.
+  Object.values(haveditImages).forEach(function (src) {
+    const img = new Image();
+    img.src = src;
+  });
+</script>
 
 
 

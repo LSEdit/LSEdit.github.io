@@ -186,53 +186,7 @@
     <i class="fas fa-chevron-up"></i>
   </button>
 
-  <!-- More Works Dropdown -->
-  <div class="more-works-container">
-    <button class="more-works-btn" onclick="toggleMoreWorks()" title="View More Works from Our Lab">
-      <i class="fas fa-flask"></i>
-      More Works
-      <i class="fas fa-chevron-down dropdown-arrow"></i>
-    </button>
-    <div class="more-works-dropdown" id="moreWorksDropdown">
-      <div class="dropdown-header">
-        <h4>More Works from Our Lab</h4>
-        <button class="close-btn" onclick="toggleMoreWorks()">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="works-list">
-        <!-- TODO: Replace with your lab's related works -->
-        <a href="https://arxiv.org/abs/PAPER_ID_1" class="work-item" target="_blank">
-          <div class="work-info">
-            <!-- TODO: Replace with actual paper title -->
-            <h5>Paper Title 1</h5>
-            <!-- TODO: Replace with brief description -->
-            <p>Brief description of the work and its main contribution.</p>
-            <!-- TODO: Replace with venue and year -->
-            <span class="work-venue">Conference/Journal 2024</span>
-          </div>
-          <i class="fas fa-external-link-alt"></i>
-        </a>
-        <!-- TODO: Add more related works or remove extra items -->
-        <a href="https://arxiv.org/abs/PAPER_ID_2" class="work-item" target="_blank">
-          <div class="work-info">
-            <h5>Paper Title 2</h5>
-            <p>Brief description of the work and its main contribution.</p>
-            <span class="work-venue">Conference/Journal 2023</span>
-          </div>
-          <i class="fas fa-external-link-alt"></i>
-        </a>
-        <a href="https://arxiv.org/abs/PAPER_ID_3" class="work-item" target="_blank">
-          <div class="work-info">
-            <h5>Paper Title 3</h5>
-            <p>Brief description of the work and its main contribution.</p>
-            <span class="work-venue">Conference/Journal 2023</span>
-          </div>
-          <i class="fas fa-external-link-alt"></i>
-        </a>
-      </div>
-    </div>
-  </div>
+
 
   <main id="main-content">
   <section class="hero">
@@ -314,23 +268,7 @@
 </section>
 
 
-<!-- Teaser video-->
-<section class="hero teaser">
-  <div class="container is-max-desktop">
-    <div class="hero-body">
-      <!-- TODO: Replace with your teaser video -->
-      <video poster="" id="tree" autoplay controls muted loop height="100%" preload="metadata">
-        <!-- TODO: Add your video file path here -->
-        <source src="static/videos/banner_video.mp4" type="video/mp4">
-      </video>
-      <!-- TODO: Replace with your video description -->
-      <h2 class="subtitle has-text-centered">
-        Aliquam vitae elit ullamcorper tellus egestas pellentesque. Ut lacus tellus, maximus vel lectus at, placerat pretium mi. Maecenas dignissim tincidunt vestibulum. Sed consequat hendrerit nisl ut maximus. 
-      </h2>
-    </div>
-  </div>
-</section>
-<!-- End teaser video -->
+
 
 <!-- Paper abstract -->
 <section class="section hero is-light">
@@ -351,52 +289,223 @@
 <!-- End paper abstract -->
 
 
-<!-- Static interactive slider demo -->
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container is-max-desktop">
-      <h2 class="title is-3 has-text-centered">Interactive Visualization</h2>
+<!-- HAVEdit interactive visualization -->
+<section class="section" id="havedit-interactive-demo">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">HAVEdit Interactive Visualization</h2>
 
-      <p class="has-text-centered" style="margin-bottom: 1.5rem;">
-        Drag the slider to visualize the result under different values of
-        <b>t</b>. This is a static demo using pre-computed images.
-      </p>
+    <p class="has-text-centered" style="margin-bottom: 1.5rem;">
+      Drag the slider to inspect the intermediate prediction at denoising step
+      <b>t</b>. All images are pre-computed offline and loaded statically.
+    </p>
 
-      <div class="columns is-centered">
-        <div class="column is-four-fifths has-text-centered">
-          <img
-            id="havedit-slider-image"
-            src="static/images/carousel1.jpg"
-            alt="HavEdit slider demo result"
-            style="width: 100%; border-radius: 12px;"
-          >
+    <div class="columns is-centered is-vcentered">
+      <div class="column has-text-centered">
+        <h3 class="title is-5">Original</h3>
+        <img
+          id="havedit-original-image"
+          src="static/images/havedit/cat_black_flux2/original.png"
+          alt="Original image"
+          style="width: 100%; border-radius: 12px;"
+        >
+      </div>
 
-          <h2 class="subtitle has-text-centered" style="margin-top: 1rem;">
-            t = <span id="havedit-slider-value">1</span>
-          </h2>
+      <div class="column has-text-centered">
+        <h3 class="title is-5">
+          Visualization, t = <span id="havedit-step-label">1</span>
+        </h3>
+        <img
+          id="havedit-main-image"
+          src="static/images/havedit/cat_black_flux2/frames/x0/step_0001.png"
+          alt="HAVEdit intermediate visualization"
+          style="width: 100%; border-radius: 12px;"
+        >
+      </div>
 
-          <input
-            id="havedit-slider"
-            class="slider is-fullwidth is-large"
-            type="range"
-            min="1"
-            max="4"
-            value="1"
-            step="1"
-          >
+      <div class="column has-text-centered">
+        <h3 class="title is-5">Result</h3>
+        <img
+          id="havedit-result-image"
+          src="static/images/havedit/cat_black_flux2/result.png"
+          alt="Final edited result"
+          style="width: 100%; border-radius: 12px;"
+        >
+      </div>
+    </div>
 
-          <div class="level is-mobile" style="margin-top: 0.5rem;">
-            <div class="level-item">1</div>
-            <div class="level-item">2</div>
-            <div class="level-item">3</div>
-            <div class="level-item">4</div>
+    <div class="box" style="margin-top: 1.5rem;">
+      <div class="field">
+        <label class="label">
+          Step t:
+          <span id="havedit-step-value">1</span>
+          /
+          <span id="havedit-step-max">28</span>
+        </label>
+
+        <input
+          id="havedit-step-slider"
+          class="slider is-fullwidth is-large"
+          type="range"
+          min="1"
+          max="28"
+          value="1"
+          step="1"
+        >
+      </div>
+
+      <div class="field" style="margin-top: 1rem;">
+        <label class="label">Visualization Type</label>
+        <div class="control">
+          <div class="select is-fullwidth">
+            <select id="havedit-view-select">
+              <option value="x0">x0^t Prediction</option>
+              <option value="overlay_semantic_prior">Overlay: Semantic Prior Current</option>
+              <option value="overlay_edit_mask">Overlay: Edit Mask</option>
+              <option value="overlay_preserve_weight">Overlay: Preserve Weight</option>
+              <option value="semantic_prior">Semantic Prior Current</option>
+              <option value="attention">Attention</option>
+              <option value="edit_mask">Edit Mask</option>
+              <option value="preserve_weight">Preserve Weight</option>
+            </select>
           </div>
         </div>
       </div>
+
+      <p id="havedit-view-caption" class="has-text-centered" style="margin-top: 1rem;">
+        x0^t Prediction: clean-image prediction reconstructed from the intermediate latent at denoising step t.
+      </p>
     </div>
   </div>
 </section>
-<!-- End static interactive slider demo -->
+<!-- End HAVEdit interactive visualization -->
+
+<script>
+  const haveditAssetBase = "static/images/havedit/cat_black_flux2/";
+  const haveditManifestPath = haveditAssetBase + "manifest.json";
+
+  const haveditStepSlider = document.getElementById("havedit-step-slider");
+  const haveditStepValue = document.getElementById("havedit-step-value");
+  const haveditStepLabel = document.getElementById("havedit-step-label");
+  const haveditStepMax = document.getElementById("havedit-step-max");
+  const haveditMainImage = document.getElementById("havedit-main-image");
+  const haveditViewSelect = document.getElementById("havedit-view-select");
+  const haveditViewCaption = document.getElementById("havedit-view-caption");
+
+  let haveditFrames = [];
+
+  const haveditCaptions = {
+    x0: "x0^t Prediction: clean-image prediction reconstructed from the intermediate latent at denoising step t.",
+    overlay_semantic_prior: "Overlay: dynamic semantic prior blended onto the current x0^t prediction.",
+    overlay_edit_mask: "Overlay: edit permission map blended onto the current x0^t prediction.",
+    overlay_preserve_weight: "Overlay: preserve/protection weight blended onto the current x0^t prediction.",
+    semantic_prior: "Semantic Prior Current: dynamic semantic evidence from the current step attention.",
+    attention: "Attention: per-step attention diagnostic map.",
+    edit_mask: "Edit Mask: regions allowed to change by HAVEdit after warmup.",
+    preserve_weight: "Preserve Weight: regions protected from editing after warmup."
+  };
+
+  function haveditAssetUrl(path) {
+    if (!path) {
+      return "";
+    }
+
+    if (
+      path.startsWith("http://") ||
+      path.startsWith("https://") ||
+      path.startsWith("static/")
+    ) {
+      return path;
+    }
+
+    return haveditAssetBase + path.replace(/^\.?\//, "");
+  }
+
+  function haveditFallbackPath(step, viewKey) {
+    const padded = String(step).padStart(4, "0");
+
+    const folderMap = {
+      x0: "frames/x0",
+      semantic_prior: "frames/semantic_prior",
+      attention: "frames/attention",
+      edit_mask: "frames/edit_mask",
+      preserve_weight: "frames/preserve_weight",
+      overlay_edit_mask: "frames/overlay_edit_mask",
+      overlay_preserve_weight: "frames/overlay_preserve_weight",
+      overlay_semantic_prior: "frames/overlay_semantic_prior"
+    };
+
+    const folder = folderMap[viewKey] || "frames/x0";
+    return `${haveditAssetBase}${folder}/step_${padded}.png`;
+  }
+
+  function updateHaveditDemo() {
+    const step = Number(haveditStepSlider.value);
+    const viewKey = haveditViewSelect.value;
+
+    haveditStepValue.textContent = step;
+    haveditStepLabel.textContent = step;
+    haveditViewCaption.textContent = haveditCaptions[viewKey] || "";
+
+    const frame = haveditFrames[step - 1];
+
+    if (frame && frame[viewKey]) {
+      haveditMainImage.src = haveditAssetUrl(frame[viewKey]);
+    } else {
+      haveditMainImage.src = haveditFallbackPath(step, viewKey);
+    }
+  }
+
+  function preloadHaveditFrames(viewKey) {
+    haveditFrames.forEach(function(frame, index) {
+      const step = index + 1;
+      const src = frame && frame[viewKey]
+        ? haveditAssetUrl(frame[viewKey])
+        : haveditFallbackPath(step, viewKey);
+
+      const img = new Image();
+      img.src = src;
+    });
+  }
+
+  fetch(haveditManifestPath)
+    .then(function(response) {
+      if (!response.ok) {
+        throw new Error("Cannot load manifest.json");
+      }
+      return response.json();
+    })
+    .then(function(manifest) {
+      haveditFrames = manifest.frames || [];
+
+      if (haveditFrames.length > 0) {
+        haveditStepSlider.min = 1;
+        haveditStepSlider.max = haveditFrames.length;
+        haveditStepSlider.value = 1;
+        haveditStepMax.textContent = haveditFrames.length;
+      }
+
+      updateHaveditDemo();
+      preloadHaveditFrames("x0");
+    })
+    .catch(function(error) {
+      console.warn("HAVEdit manifest loading failed. Falling back to hard-coded frame paths.", error);
+
+      haveditFrames = new Array(28).fill(null);
+      haveditStepSlider.min = 1;
+      haveditStepSlider.max = 28;
+      haveditStepSlider.value = 1;
+      haveditStepMax.textContent = 28;
+
+      updateHaveditDemo();
+    });
+
+  haveditStepSlider.addEventListener("input", updateHaveditDemo);
+
+  haveditViewSelect.addEventListener("change", function() {
+    updateHaveditDemo();
+    preloadHaveditFrames(haveditViewSelect.value);
+  });
+</script>
 
 <script>
   const haveditSlider = document.getElementById("havedit-slider");
@@ -425,80 +534,6 @@
 
 
 
-
-<!-- Youtube video -->
-<section class="hero is-small is-light">
-  <div class="hero-body">
-    <div class="container">
-      <!-- Paper video. -->
-      <h2 class="title is-3">Video Presentation</h2>
-      <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          
-          <div class="publication-video">
-            <!-- TODO: Replace with your YouTube video ID -->
-            <iframe src="https://www.youtube.com/embed/JkaxUblCGz0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- End youtube video -->
-
-
-<!-- Video carousel -->
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title is-3">Another Carousel</h2>
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item item-video1">
-          <!-- TODO: Add poster image for better preview -->
-          <video poster="" id="video1" controls muted loop height="100%" preload="metadata">
-            <!-- Your video file here -->
-            <source src="static/videos/carousel1.mp4" type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-video2">
-          <!-- TODO: Add poster image for better preview -->
-          <video poster="" id="video2" controls muted loop height="100%" preload="metadata">
-            <!-- Your video file here -->
-            <source src="static/videos/carousel2.mp4" type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-video3">
-          <!-- TODO: Add poster image for better preview -->
-          <video poster="" id="video3" controls muted loop height="100%" preload="metadata">
-            <!-- Your video file here -->
-            <source src="static/videos/carousel3.mp4" type="video/mp4">
-          </video>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- End video carousel -->
-
-
-
-
-
-
-<!-- Paper poster -->
-<section class="hero is-small is-light">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title">Poster</h2>
-
-      <!-- TODO: Replace with your poster PDF -->
-      <iframe  src="static/pdfs/sample.pdf" width="100%" height="550">
-          </iframe>
-        
-      </div>
-    </div>
-  </section>
-<!--End paper poster -->
 
 
 

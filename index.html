@@ -289,14 +289,15 @@
 <!-- End paper abstract -->
 
 
-<!-- HAVEdit interactive visualization -->
-<section class="section" id="havedit-interactive-demo">
+<!-- HAVEdit parameter sweep interactive demo -->
+<section class="section" id="havedit-demo">
   <div class="container is-max-desktop">
     <h2 class="title is-3 has-text-centered">HAVEdit Interactive Visualization</h2>
 
     <p class="has-text-centered" style="margin-bottom: 1.5rem;">
-      Drag the slider to inspect the intermediate prediction at denoising step
-      <b>t</b>. All images are pre-computed offline and loaded statically.
+      Use the sliders to explore the parameter sweep. The middle panel shows
+      either <b>x0<sup>t</sup> Prediction</b> or
+      <b>Overlay: Semantic Prior Current</b>. All images are pre-computed and loaded statically.
     </p>
 
     <div class="columns is-centered is-vcentered">
@@ -304,7 +305,7 @@
         <h3 class="title is-5">Original</h3>
         <img
           id="havedit-original-image"
-          src="static/images/havedit/cat_black_flux2/original.png"
+          src="static/images/havedit/demo_light/original.webp"
           alt="Original image"
           style="width: 100%; border-radius: 12px;"
         >
@@ -312,11 +313,12 @@
 
       <div class="column has-text-centered">
         <h3 class="title is-5">
-          Visualization, t = <span id="havedit-step-label">1</span>
+          <span id="havedit-view-title">x0^t Prediction</span>,
+          t = <span id="havedit-step-label">1</span>
         </h3>
         <img
           id="havedit-main-image"
-          src="static/images/havedit/cat_black_flux2/frames/x0/step_0001.png"
+          src=""
           alt="HAVEdit intermediate visualization"
           style="width: 100%; border-radius: 12px;"
         >
@@ -326,7 +328,7 @@
         <h3 class="title is-5">Result</h3>
         <img
           id="havedit-result-image"
-          src="static/images/havedit/cat_black_flux2/result.png"
+          src=""
           alt="Final edited result"
           style="width: 100%; border-radius: 12px;"
         >
@@ -336,12 +338,57 @@
     <div class="box" style="margin-top: 1.5rem;">
       <div class="field">
         <label class="label">
-          Step t:
-          <span id="havedit-step-value">1</span>
-          /
-          <span id="havedit-step-max">28</span>
+          threshold =
+          <span id="havedit-threshold-label">0.90</span>
         </label>
+        <input
+          id="havedit-threshold-slider"
+          class="slider is-fullwidth is-medium"
+          type="range"
+          min="0"
+          max="8"
+          value="5"
+          step="1"
+        >
+      </div>
 
+      <div class="field">
+        <label class="label">
+          bhc_tau_low =
+          <span id="havedit-tau-label">0.80</span>
+        </label>
+        <input
+          id="havedit-tau-slider"
+          class="slider is-fullwidth is-medium"
+          type="range"
+          min="0"
+          max="4"
+          value="2"
+          step="1"
+        >
+      </div>
+
+      <div class="field">
+        <label class="label">
+          bhc_lambda_max =
+          <span id="havedit-lambda-label">0.15</span>
+        </label>
+        <input
+          id="havedit-lambda-slider"
+          class="slider is-fullwidth is-medium"
+          type="range"
+          min="0"
+          max="8"
+          value="5"
+          step="1"
+        >
+      </div>
+
+      <div class="field">
+        <label class="label">
+          Step t =
+          <span id="havedit-step-value">1</span> / 28
+        </label>
         <input
           id="havedit-step-slider"
           class="slider is-fullwidth is-large"
@@ -360,24 +407,170 @@
             <select id="havedit-view-select">
               <option value="x0">x0^t Prediction</option>
               <option value="overlay_semantic_prior">Overlay: Semantic Prior Current</option>
-              <option value="overlay_edit_mask">Overlay: Edit Mask</option>
-              <option value="overlay_preserve_weight">Overlay: Preserve Weight</option>
-              <option value="semantic_prior">Semantic Prior Current</option>
-              <option value="attention">Attention</option>
-              <option value="edit_mask">Edit Mask</option>
-              <option value="preserve_weight">Preserve Weight</option>
             </select>
           </div>
         </div>
       </div>
 
-      <p id="havedit-view-caption" class="has-text-centered" style="margin-top: 1rem;">
-        x0^t Prediction: clean-image prediction reconstructed from the intermediate latent at denoising step t.
-      </p>
+      <p id="havedit-path-debug" class="has-text-centered" style="margin-top: 1rem; font-size: 0.9rem; color: #666;"></p>
     </div>
   </div>
 </section>
-<!-- End HAVEdit interactive visualization -->
+<!-- End HAVEdit parameter sweep interactive demo -->
+
+<script>
+  (function () {
+    const ASSET_BASE = "static/images/havedit/demo_light/";
+
+    const thresholds = [
+      { label: "0.80", key: "0p8" },
+      { label: "0.82", key: "0p82" },
+      { label: "0.84", key: "0p84" },
+      { label: "0.86", key: "0p86" },
+      { label: "0.88", key: "0p88" },
+      { label: "0.90", key: "0p9" },
+      { label: "0.92", key: "0p92" },
+      { label: "0.94", key: "0p94" },
+      { label: "0.96", key: "0p96" }
+    ];
+
+    const tauLows = [
+      { label: "0.60", key: "0p6" },
+      { label: "0.70", key: "0p7" },
+      { label: "0.80", key: "0p8" },
+      { label: "0.85", key: "0p85" },
+      { label: "0.88", key: "0p88" }
+    ];
+
+    const lambdaMaxes = [
+      { label: "0.00", key: "0" },
+      { label: "0.03", key: "0p03" },
+      { label: "0.06", key: "0p06" },
+      { label: "0.09", key: "0p09" },
+      { label: "0.12", key: "0p12" },
+      { label: "0.15", key: "0p15" },
+      { label: "0.18", key: "0p18" },
+      { label: "0.21", key: "0p21" },
+      { label: "0.24", key: "0p24" }
+    ];
+
+    const thresholdSlider = document.getElementById("havedit-threshold-slider");
+    const tauSlider = document.getElementById("havedit-tau-slider");
+    const lambdaSlider = document.getElementById("havedit-lambda-slider");
+    const stepSlider = document.getElementById("havedit-step-slider");
+    const viewSelect = document.getElementById("havedit-view-select");
+
+    const thresholdLabel = document.getElementById("havedit-threshold-label");
+    const tauLabel = document.getElementById("havedit-tau-label");
+    const lambdaLabel = document.getElementById("havedit-lambda-label");
+    const stepLabel = document.getElementById("havedit-step-label");
+    const stepValue = document.getElementById("havedit-step-value");
+    const viewTitle = document.getElementById("havedit-view-title");
+
+    const mainImage = document.getElementById("havedit-main-image");
+    const resultImage = document.getElementById("havedit-result-image");
+    const pathDebug = document.getElementById("havedit-path-debug");
+
+    function getCurrentParams() {
+      return {
+        threshold: thresholds[Number(thresholdSlider.value)],
+        tauLow: tauLows[Number(tauSlider.value)],
+        lambdaMax: lambdaMaxes[Number(lambdaSlider.value)]
+      };
+    }
+
+    function getVariantDir() {
+      const params = getCurrentParams();
+
+      return (
+        "threshold_" + params.threshold.key +
+        "__bhc_tau_low_" + params.tauLow.key +
+        "__bhc_lambda_max_" + params.lambdaMax.key
+      );
+    }
+
+    function getStepFilename(step) {
+      return "step_" + String(step).padStart(4, "0") + ".webp";
+    }
+
+    function getFrameUrl(viewType, step) {
+      return (
+        ASSET_BASE +
+        "grid/" +
+        getVariantDir() +
+        "/frames/" +
+        viewType +
+        "/" +
+        getStepFilename(step)
+      );
+    }
+
+    function updateLabels() {
+      const params = getCurrentParams();
+      const step = Number(stepSlider.value);
+      const viewType = viewSelect.value;
+
+      thresholdLabel.textContent = params.threshold.label;
+      tauLabel.textContent = params.tauLow.label;
+      lambdaLabel.textContent = params.lambdaMax.label;
+
+      stepLabel.textContent = step;
+      stepValue.textContent = step;
+
+      viewTitle.textContent =
+        viewType === "x0"
+          ? "x0^t Prediction"
+          : "Overlay: Semantic Prior Current";
+    }
+
+    function updateImages() {
+      const step = Number(stepSlider.value);
+      const viewType = viewSelect.value;
+
+      const mainUrl = getFrameUrl(viewType, step);
+      const resultUrl = getFrameUrl("x0", 28);
+
+      mainImage.src = mainUrl;
+      resultImage.src = resultUrl;
+
+      pathDebug.textContent = "Current variant: " + getVariantDir();
+
+      preloadNearbyFrames(step, viewType);
+    }
+
+    function preloadImage(src) {
+      const img = new Image();
+      img.src = src;
+    }
+
+    function preloadNearbyFrames(step, viewType) {
+      const nearbySteps = [step - 1, step + 1, 28];
+
+      nearbySteps.forEach(function (s) {
+        if (s < 1 || s > 28) return;
+        preloadImage(getFrameUrl(viewType, s));
+      });
+    }
+
+    function updateDemo() {
+      updateLabels();
+      updateImages();
+    }
+
+    [
+      thresholdSlider,
+      tauSlider,
+      lambdaSlider,
+      stepSlider,
+      viewSelect
+    ].forEach(function (control) {
+      control.addEventListener("input", updateDemo);
+      control.addEventListener("change", updateDemo);
+    });
+
+    updateDemo();
+  })();
+</script>
 
 <script>
   const haveditAssetBase = "static/images/havedit/cat_black_flux2/";
